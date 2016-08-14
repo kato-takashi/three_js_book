@@ -14,11 +14,16 @@
   </style>
 </head>
 <body>
+  <div id="Stats-output">
+  </div>
+
   <div id="WebGL-output">
   </div>
   <script>
     function init(){
       //three.jsの処理
+      var stats = initStats();
+
       var scene = new THREE.Scene();
 
       var camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 1000);
@@ -92,6 +97,43 @@
 
         // render the scene
         renderer.render(scene, camera);
+
+        // call the render function
+        var step = 0;
+        renderScene();
+        //描画
+        function renderScene() {
+            stats.update();
+            // rotate the cube around its axes
+            cube.rotation.x += 0.02;
+            cube.rotation.y += 0.02;
+            cube.rotation.z += 0.02;
+
+            // bounce the sphere up and down
+            step += 0.04;
+            sphere.position.x = 20 + ( 10 * (Math.cos(step)));
+            sphere.position.y = 2 + ( 10 * Math.abs(Math.sin(step)));
+
+            // render using requestAnimationFrame
+            requestAnimationFrame(renderScene);
+            renderer.render(scene, camera);
+        }
+
+        //統計情報を初期化してdivに追加
+        function initStats() {
+            var stats = new Stats();
+
+            stats.setMode(0); // 0: fps, 1: ms
+
+            // Align top-left
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+
+            document.getElementById("Stats-output").appendChild(stats.domElement);
+
+            return stats;
+        }
 
     }
     window.onload = init;
