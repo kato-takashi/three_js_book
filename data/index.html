@@ -20,15 +20,19 @@
   <div id="WebGL-output">
   </div>
   <script>
+    var camera;
+    var scene;
+    var renderer;
+
     function init(){
       //three.jsの処理
       var stats = initStats();
 
-      var scene = new THREE.Scene();
+      scene = new THREE.Scene();
 
-      var camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 1000);
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 1000);
 
-      var renderer = new THREE.WebGLRenderer();
+      renderer = new THREE.WebGLRenderer();
       renderer.setClearColor(new THREE.Color(0xEEEEEE));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.shadowMap.enabled = true;
@@ -145,7 +149,18 @@
         }
 
     }
+    //ブラウザサイズの変更
+    function onResize() {
+        // console.log("resize");
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
     window.onload = init;
+    // listen to the resize events
+    window.addEventListener('resize', onResize, false);
+
   </script>
 
 </body>
